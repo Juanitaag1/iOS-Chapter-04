@@ -6,7 +6,7 @@ import UIKit
     // TODO: Mark the ViewController as conforming to the UITextFieldDelegate Protocol
 class ConversionViewController: UIViewController, UITextFieldDelegate {
     
-    @IBOutlet var celsiusLabel: UILabel!
+    @IBOutlet var celsiusTextField: UITextField!
     @IBOutlet var textField: UITextField!
     
     //ViewController Functions
@@ -22,15 +22,13 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
     // TODO: Modify code to reject (return false) if it finds any letters in the replacement string
     //  (hint-use Documentation to find a NSCharacterSet collection for letters, and a String method that finds a range using a NSCharacterSet)
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if textField == self.textField{
+            let existingTextHasDecimalSeparator = textField.text?.range(of: ".")
+            let replacementTextHasDecimalSeparator = string.range(of: ".")
         
-        let existingTextHasDecimalSeparator = textField.text?.range(of: ".")
-        let replacementTextHasDecimalSeparator = string.range(of: ".")
-        
-       // let letter = CharacterSet.init(charactersIn: textField.text!)
-        
-        
-        let letters = NSCharacterSet.letters
-        let string1 = textField.text!
+             // let letter = CharacterSet.init(charactersIn: textField.text!)
+             let letters = NSCharacterSet.letters
+             let string1 = textField.text!
             
             //will return nil if no letters found and not reject - return true
             //if letters found, will not return nil and reject and return false
@@ -39,15 +37,14 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
             }else{
                 return false
             }*/
-        
-
-        
-        if string1.rangeOfCharacter(from: letters) != nil || existingTextHasDecimalSeparator != nil && replacementTextHasDecimalSeparator != nil {
-            return false
-        } else {
-            return true
-        }
-        
+    
+             if string1.rangeOfCharacter(from: letters) != nil || existingTextHasDecimalSeparator != nil && replacementTextHasDecimalSeparator != nil {
+                return false
+            } else {
+                return true
+            }
+         }
+        return false
     }
     // DELEGATE METHOD : textFieldDidBeginEditing - is called when the user selects the text field
     // TODO: Add and modify the method to build expectation for the output by changing the celsiusLabel when the input field is selected
@@ -55,8 +52,14 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
     // modify the celsiusLabel color to be 60% red, 60% green, and 40% blue (refer to the Developer Documentation for UIColor)
 
     func textFieldDidBeginEditing(_ textField: UITextField) {
-        celsiusLabel.text = "?"
-        celsiusLabel.textColor = UIColor.init(red: 60, green: 60, blue: 40, alpha: 1)
+        if textField == self.textField{
+        celsiusTextField.text = "?"
+        celsiusTextField.textColor = UIColor.init(red: 60, green: 60, blue: 40, alpha: 1)
+        }
+        if textField == celsiusTextField{
+            celsiusTextField.text = "?"
+            celsiusTextField.textColor = UIColor.blue
+        }
         
     }
     // EVENT HANDLER METHOD : Called when TextField is Changed (notice the optional binding)
@@ -84,9 +87,9 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
     // Helper Functions
     func updateCelsiusLabel() {
         if let celsiusValue = celsiusValue {
-            celsiusLabel.text = numberFormatter.string(from: NSNumber(value: celsiusValue.value))
+            celsiusTextField.text = numberFormatter.string(from: NSNumber(value: celsiusValue.value))
         } else {
-            celsiusLabel.text = "???"
+            celsiusTextField.text = "???"
         }
     }
     // Limits the number of decimal places in the output label to 1
@@ -96,5 +99,7 @@ class ConversionViewController: UIViewController, UITextFieldDelegate {
         nf.maximumFractionDigits = 1
         return nf
     }()
+    
+    
     
 }
